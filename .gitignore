@@ -1,0 +1,13 @@
+build/*
+*.o
+*.a
+CMakeFiles*
+CMakeDoxy*
+CMakeCache.txt
+cmake_install.cmake
+tests/lib/*
+Makefile
+lfn-chess
+Unit_Tests_run
+.vscode/*
+
