@@ -16,6 +16,7 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 
 add_executable(Unit_Tests_run
     bitboard_tests.cc
+    board_tests.cc
 )
 
 target_link_libraries(Unit_Tests_run gtest gtest_main)

@@ -1,6 +1,5 @@
-#include "gtest/gtest.h"
-
 #include "bitboard.h"
+#include "gtest/gtest.h"
 
 TEST(BitboardBasic, Equality) {
   Bitboard b1, b2;
@@ -34,4 +33,46 @@ TEST(BitboardBasic, Population) {
 
   Bitboard b2(0x210040000800420U);
   EXPECT_EQ(b2.population(), 6U);
+}
+
+TEST(PawnBitboardBasic, Pawns) {
+  PawnBitboard b1(Color::WHITE);
+  EXPECT_EQ(b1.population(), 8U);
+  PawnBitboard b2(Color::BLACK);
+  EXPECT_EQ(b2.population(), 8U);
+}
+
+TEST(KnightBitboardBasic, Knights) {
+  KnightBitboard b1(Color::WHITE);
+  EXPECT_EQ(b1.population(), 2U);
+  KnightBitboard b2(Color::BLACK);
+  EXPECT_EQ(b2.population(), 2U);
+}
+
+TEST(BishopBitboardBasic, Bishops) {
+  BishopBitboard b1(Color::WHITE);
+  EXPECT_EQ(b1.population(), 2U);
+  BishopBitboard b2(Color::BLACK);
+  EXPECT_EQ(b2.population(), 2U);
+}
+
+TEST(RookBitboardBasic, Rooks) {
+  RookBitboard b1(Color::WHITE);
+  EXPECT_EQ(b1.population(), 2U);
+  RookBitboard b2(Color::BLACK);
+  EXPECT_EQ(b2.population(), 2U);
+}
+
+TEST(QueenBitboardBasic, Queen) {
+  QueenBitboard b1(Color::WHITE);
+  EXPECT_EQ(b1.population(), 1U);
+  QueenBitboard b2(Color::BLACK);
+  EXPECT_EQ(b2.population(), 1U);
+}
+
+TEST(KingBitboardBasic, King) {
+  KingBitboard b1(Color::WHITE);
+  EXPECT_EQ(b1.population(), 1U);
+  KingBitboard b2(Color::BLACK);
+  EXPECT_EQ(b2.population(), 1U);
 }
