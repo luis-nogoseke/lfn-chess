@@ -21,3 +21,14 @@ TEST(BoardBasic, FEN) {
   Board b;
   std::cout << b.fen() << std::endl;
 }
+
+TEST(BoardBasic, setFEN) {
+  Board b;
+  b.set_fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq e3 0 1");
+}
+
+// is game over
+// is check
+// is  checkmate
+// is stalemate
+// is insufficient material

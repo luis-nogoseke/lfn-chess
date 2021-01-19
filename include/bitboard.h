@@ -3,18 +3,13 @@
 
 #include <cstdint>
 
-const std::uint64_t k1 = 0x5555555555555555;
-const std::uint64_t k2 = 0x3333333333333333;
-const std::uint64_t k4 = 0x0f0f0f0f0f0f0f0f;
-const std::uint64_t kf = 0x0101010101010101;
-
-enum class Color { WHITE, BLACK };
+#include "utils.h"
 
 class Bitboard {
-protected:
+ protected:
   std::uint64_t bitboard;
 
-public:
+ public:
   Bitboard() : bitboard(0U) {}
 
   explicit Bitboard(std::uint64_t position) : bitboard(position) {}
@@ -38,16 +33,16 @@ public:
 
   inline uint8_t population() {
     uint64_t x = this->bitboard;
-    x = x - ((x >> 1) & k1);
-    x = (x & k2) + ((x >> 2) & k2);
-    x = (x + (x >> 4)) & k4;
-    x = (x * kf) >> 56;
+    x = x - ((x >> 1) & 0x5555555555555555);
+    x = (x & 0x3333333333333333) + ((x >> 2) & 0x3333333333333333);
+    x = (x + (x >> 4)) & 0x0f0f0f0f0f0f0f0f;
+    x = (x * 0x0101010101010101) >> 56;
     return static_cast<uint8_t>(x);
   }
 };
 
 class PawnBitboard : public Bitboard {
-public:
+ public:
   PawnBitboard(Color color) {
     if (color == Color::WHITE) {
       this->bitboard = 0xFF00;
@@ -58,7 +53,7 @@ public:
 };
 
 class RookBitboard : public Bitboard {
-public:
+ public:
   RookBitboard(Color color) {
     if (color == Color::WHITE) {
       this->bitboard = 0x81;
@@ -69,7 +64,7 @@ public:
 };
 
 class KnightBitboard : public Bitboard {
-public:
+ public:
   KnightBitboard(Color color) {
     if (color == Color::WHITE) {
       this->bitboard = 0x42;
@@ -80,7 +75,7 @@ public:
 };
 
 class BishopBitboard : public Bitboard {
-public:
+ public:
   BishopBitboard(Color color) {
     if (color == Color::WHITE) {
       this->bitboard = 0x24;
@@ -91,23 +86,23 @@ public:
 };
 
 class QueenBitboard : public Bitboard {
-public:
+ public:
   QueenBitboard(Color color) {
     if (color == Color::WHITE) {
-      this->bitboard = 0x10;
+      this->bitboard = 0x8;
     } else {
-      this->bitboard = 0x1000000000000000;
+      this->bitboard = 0x800000000000000;
     }
   }
 };
 
 class KingBitboard : public Bitboard {
-public:
+ public:
   KingBitboard(Color color) {
     if (color == Color::WHITE) {
-      this->bitboard = 0x8;
+      this->bitboard = 0x10;
     } else {
-      this->bitboard = 0x800000000000000;
+      this->bitboard = 0x1000000000000000;
     }
   }
 };
