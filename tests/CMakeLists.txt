@@ -9,7 +9,7 @@ if(NOT EXISTS ${GOOGLETEST_DIR})
     )
 endif()
 
-set(CMAKE_CXX_FLAGS "-Wno-c++98-compat")
+set(CMAKE_CXX_FLAGS "-Wno-c++98-compat  -ggdb")
 add_subdirectory(lib/googletest)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/include)

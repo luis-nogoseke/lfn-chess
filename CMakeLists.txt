@@ -2,12 +2,12 @@ cmake_minimum_required(VERSION 3.9)
 project("lfn-chess" CXX)
 
 set(CMAKE_CXX_STANDARD 17)
-SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall -Werror -pedantic")
+SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall -Werror -pedantic -ggdb")
 
 include(CheckCXXCompilerFlag)
 check_cxx_compiler_flag(-Weverything COMPILER_SUPPORTS_EVERYTHING)
 if(COMPILER_SUPPORTS_EVERYTHING)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weverything")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weverything  -ggdb")
   message(STATUS "The compiler ${CMAKE_CXX_COMPILER} supports -Weverything.")
 endif()
 
