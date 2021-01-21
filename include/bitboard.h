@@ -39,6 +39,12 @@ class Bitboard {
     x = (x * 0x0101010101010101) >> 56;
     return static_cast<uint8_t>(x);
   }
+
+  inline void set_bit(uint8_t square) { bitboard |= (2 ^ square); }
+
+  inline bool is_bit_set(uint8_t square) {
+    return static_cast<bool>(bitboard && (square + 1));
+  }
 };
 
 class PawnBitboard : public Bitboard {

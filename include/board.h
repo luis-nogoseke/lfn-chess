@@ -16,20 +16,20 @@
 class Board {
  private:
   // White
-  std::unique_ptr<PawnBitboard> white_pawns;
-  std::unique_ptr<KnightBitboard> white_knights;
-  std::unique_ptr<BishopBitboard> white_bishops;
-  std::unique_ptr<RookBitboard> white_rooks;
-  std::unique_ptr<QueenBitboard> white_queen;
-  std::unique_ptr<KingBitboard> white_king;
+  std::shared_ptr<PawnBitboard> white_pawns;
+  std::shared_ptr<KnightBitboard> white_knights;
+  std::shared_ptr<BishopBitboard> white_bishops;
+  std::shared_ptr<RookBitboard> white_rooks;
+  std::shared_ptr<QueenBitboard> white_queen;
+  std::shared_ptr<KingBitboard> white_king;
 
   // Black
-  std::unique_ptr<PawnBitboard> black_pawns;
-  std::unique_ptr<KnightBitboard> black_knights;
-  std::unique_ptr<BishopBitboard> black_bishops;
-  std::unique_ptr<RookBitboard> black_rooks;
-  std::unique_ptr<QueenBitboard> black_queen;
-  std::unique_ptr<KingBitboard> black_king;
+  std::shared_ptr<PawnBitboard> black_pawns;
+  std::shared_ptr<KnightBitboard> black_knights;
+  std::shared_ptr<BishopBitboard> black_bishops;
+  std::shared_ptr<RookBitboard> black_rooks;
+  std::shared_ptr<QueenBitboard> black_queen;
+  std::shared_ptr<KingBitboard> black_king;
 
   std::vector<Piece> squares{64, Piece::None};
 
@@ -54,156 +54,42 @@ class Board {
         total_moves(0U),
         castling_rights(15U),
         en_passant(64),
-        white_pawns(std::make_unique<PawnBitboard>(Color::WHITE)),
-        white_knights(std::make_unique<KnightBitboard>(Color::WHITE)),
-        white_bishops(std::make_unique<BishopBitboard>(Color::WHITE)),
-        white_rooks(std::make_unique<RookBitboard>(Color::WHITE)),
-        white_queen(std::make_unique<QueenBitboard>(Color::WHITE)),
-        white_king(std::make_unique<KingBitboard>(Color::WHITE)),
-        black_pawns(std::make_unique<PawnBitboard>(Color::BLACK)),
-        black_knights(std::make_unique<KnightBitboard>(Color::BLACK)),
-        black_bishops(std::make_unique<BishopBitboard>(Color::BLACK)),
-        black_rooks(std::make_unique<RookBitboard>(Color::BLACK)),
-        black_queen(std::make_unique<QueenBitboard>(Color::BLACK)),
-        black_king(std::make_unique<KingBitboard>(Color::BLACK)) {}
+        white_pawns(std::make_shared<PawnBitboard>(Color::WHITE)),
+        white_knights(std::make_shared<KnightBitboard>(Color::WHITE)),
+        white_bishops(std::make_shared<BishopBitboard>(Color::WHITE)),
+        white_rooks(std::make_shared<RookBitboard>(Color::WHITE)),
+        white_queen(std::make_shared<QueenBitboard>(Color::WHITE)),
+        white_king(std::make_shared<KingBitboard>(Color::WHITE)),
+        black_pawns(std::make_shared<PawnBitboard>(Color::BLACK)),
+        black_knights(std::make_shared<KnightBitboard>(Color::BLACK)),
+        black_bishops(std::make_shared<BishopBitboard>(Color::BLACK)),
+        black_rooks(std::make_shared<RookBitboard>(Color::BLACK)),
+        black_queen(std::make_shared<QueenBitboard>(Color::BLACK)),
+        black_king(std::make_shared<KingBitboard>(Color::BLACK)) {}
 
   std::string fen() {
     std::stringstream ss;
     // Pieces
-    // There is probably a better way to do this
-    int empty = 0;
-    for (int i = 56; i < 64; ++i) {
-      if (squares[i] != Piece::None) {
-        if (empty != 0) {
-          ss << empty;
-          empty = 0;
+    int empty;
+    for (int j = 8; j > 0; --j) {
+      empty = 0;
+      for (int i = 8 * (j - 1); i < 8 * j; ++i) {
+        if (squares[i] != Piece::None) {
+          if (empty != 0) {
+            ss << empty;
+            empty = 0;
+          }
+          ss << piece_symbol.at(squares[i]);
+        } else {
+          ++empty;
         }
-        ss << piece_symbol.at(squares[i]);
-      } else {
-        ++empty;
       }
-    }
-    if (empty != 0) {
-      ss << empty;
-    }
-    ss << "/";
-
-    empty = 0;
-    for (int i = 48; i < 56; ++i) {
-      if (squares[i] != Piece::None) {
-        if (empty != 0) {
-          ss << empty;
-          empty = 0;
-        }
-        ss << piece_symbol.at(squares[i]);
-      } else {
-        ++empty;
+      if (empty != 0) {
+        ss << empty;
       }
-    }
-    if (empty != 0) {
-      ss << empty;
-    }
-    ss << "/";
-
-    empty = 0;
-    for (int i = 40; i < 48; ++i) {
-      if (squares[i] != Piece::None) {
-        if (empty != 0) {
-          ss << empty;
-          empty = 0;
-        }
-        ss << piece_symbol.at(squares[i]);
-      } else {
-        ++empty;
+      if (j != 1) {
+        ss << "/";
       }
-    }
-    if (empty != 0) {
-      ss << empty;
-    }
-    ss << "/";
-
-    empty = 0;
-    for (int i = 32; i < 40; ++i) {
-      if (squares[i] != Piece::None) {
-        if (empty != 0) {
-          ss << empty;
-          empty = 0;
-        }
-        ss << piece_symbol.at(squares[i]);
-      } else {
-        ++empty;
-      }
-    }
-    if (empty != 0) {
-      ss << empty;
-    }
-    ss << "/";
-
-    empty = 0;
-    for (int i = 24; i < 32; ++i) {
-      if (squares[i] != Piece::None) {
-        if (empty != 0) {
-          ss << empty;
-          empty = 0;
-        }
-        ss << piece_symbol.at(squares[i]);
-      } else {
-        ++empty;
-      }
-    }
-    if (empty != 0) {
-      ss << empty;
-    }
-    ss << "/";
-
-    empty = 0;
-    for (int i = 16; i < 24; ++i) {
-      if (squares[i] != Piece::None) {
-        if (empty != 0) {
-          ss << empty;
-          empty = 0;
-        }
-        ss << piece_symbol.at(squares[i]);
-      } else {
-        ++empty;
-      }
-    }
-    if (empty != 0) {
-      ss << empty;
-    }
-    ss << "/";
-
-    empty = 0;
-    for (int i = 8; i < 16; ++i) {
-      if (squares[i] != Piece::None) {
-        if (empty != 0) {
-          ss << empty;
-          empty = 0;
-        }
-        ss << piece_symbol.at(squares[i]);
-      } else {
-        ++empty;
-      }
-    }
-    if (empty != 0) {
-      ss << empty;
-    }
-    ss << "/";
-
-    empty = 0;
-    for (int i = 0; i < 8; ++i) {
-      if (squares[i] != Piece::None) {
-        if (empty != 0) {
-          ss << empty;
-          empty = 0;
-        }
-        ss << piece_symbol.at(squares[i]);
-      } else {
-        ++empty;
-      }
-    }
-    if (empty != 0) {
-      ss << empty;
     }
 
     // next to play
@@ -285,12 +171,14 @@ class Board {
       return -1;
     }
     // Piece positions
-    // Clear the board
-    // Empty the board quares
-    // for (sq=A1;sq<=H8;sq++) bb.squares[sq] = EMPTY;
-    //
     int j = 1, i = 0, sq, column, row;
     char letter;
+
+    // Clear the board
+    for (sq = 0; sq < 64; ++sq) {
+      squares[sq] = Piece::None;
+    }
+
     while ((j <= 64) && (i <= tokens[0].length())) {
       letter = tokens[0].at(i);
       i++;
@@ -405,7 +293,50 @@ class Board {
     total_moves = std::stoul(tokens[5]);
 
     // Set up the other bitboards
-
+    std::shared_ptr<Bitboard> bb;
+    Piece p;
+    for (sq = 0; sq < 64; ++sq) {
+      switch (squares[sq]) {
+        case Piece::White_Pawn:
+          white_pawns->set_bit(sq);
+          break;
+        case Piece::White_Knight:
+          white_knights->set_bit(sq);
+          break;
+        case Piece::White_Bishop:
+          white_bishops->set_bit(sp);
+          break;
+        case Piece::White_Rook:
+          white_rooks->set_bit(sp);
+          break;
+        case Piece::White_Queen:
+          white_queen->set_bit(sp);
+          break;
+        case Piece::White_King:
+          white_king->set_bit(sp);
+          break;
+        case Piece::Black_Pawn:
+          black_pawns->set_bit(sq);
+          break;
+        case Piece::Black_Knight:
+          black_knights->set_bit(sq);
+          break;
+        case Piece::Black_Bishop:
+          black_bishops->set_bit(sp);
+          break;
+        case Piece::Black_Rook:
+          black_rooks->set_bit(sp);
+          break;
+        case Piece::Black_Queen:
+          black_queen->set_bit(sp);
+          break;
+        case Piece::Black_King:
+          black_king->set_bit(sp);
+          break;
+        default:
+          break;
+      }
+    }
     return 0;
   }
 };

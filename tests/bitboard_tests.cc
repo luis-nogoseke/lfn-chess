@@ -35,6 +35,18 @@ TEST(BitboardBasic, Population) {
   EXPECT_EQ(b2.population(), 6U);
 }
 
+TEST(BitboardBasic, SetBit) {
+  Bitboard b;
+  b.set_bit(1);
+  EXPECT_TRUE(b.is_bit_set(1));
+  b.set_bit(0);
+  EXPECT_TRUE(b.is_bit_set(0));
+  b.set_bit(63);
+  EXPECT_TRUE(b.is_bit_set(63));
+  b.set_bit(15);
+  EXPECT_TRUE(b.is_bit_set(15));
+}
+
 TEST(PawnBitboardBasic, Pawns) {
   PawnBitboard b1(Color::WHITE);
   EXPECT_EQ(b1.population(), 8U);
