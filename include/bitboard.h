@@ -14,11 +14,11 @@ class Bitboard {
 
   explicit Bitboard(std::uint64_t position) : bitboard(position) {}
 
-  inline bool operator==(const Bitboard &b) const{
+  inline bool operator==(const Bitboard &b) const {
     return this->bitboard == b.bitboard;
   }
 
-  inline bool operator!=(const Bitboard &b) const{
+  inline bool operator!=(const Bitboard &b) const {
     return !(this->bitboard == b.bitboard);
   }
 

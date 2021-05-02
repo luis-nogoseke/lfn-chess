@@ -12,32 +12,47 @@ const std::uint8_t WHITE_LONG_CASTLE = 0x2;
 const std::uint8_t BLACK_SHORT_CASTLE = 0x4;
 const std::uint8_t BLACK_LONG_CASTLE = 0x8;
 
-enum class Piece { None, White_Pawn, White_Knight, White_Bishop, White_Rook, White_Queen, White_King,
-Black_Pawn, Black_Knight, Black_Bishop, Black_Rook, Black_Queen, Black_King };
+enum class Piece {
+  None,
+  White_Pawn,
+  White_Knight,
+  White_Bishop,
+  White_Rook,
+  White_Queen,
+  White_King,
+  Black_Pawn,
+  Black_Knight,
+  Black_Bishop,
+  Black_Rook,
+  Black_Queen,
+  Black_King
+};
 
-const std::unordered_map<Piece, std::uint8_t> piece_values({{Piece::White_Pawn, 1},
-                                                            {Piece::White_Knight, 3},
-                                                            {Piece::White_Bishop, 3},
-                                                            {Piece::White_Rook, 5},
-                                                            {Piece::White_Queen, 9},
-                                                            {Piece::Black_Pawn, 1},
-                                                            {Piece::Black_Knight, 3},
-                                                            {Piece::Black_Bishop, 3},
-                                                            {Piece::Black_Rook, 5},
-                                                            {Piece::Black_Queen, 9}});
+const std::unordered_map<Piece, std::uint8_t> piece_values(
+    {{Piece::White_Pawn, 1},
+     {Piece::White_Knight, 3},
+     {Piece::White_Bishop, 3},
+     {Piece::White_Rook, 5},
+     {Piece::White_Queen, 9},
+     {Piece::Black_Pawn, 1},
+     {Piece::Black_Knight, 3},
+     {Piece::Black_Bishop, 3},
+     {Piece::Black_Rook, 5},
+     {Piece::Black_Queen, 9}});
 
-const std::unordered_map<Piece, std::string> piece_symbol({{Piece::White_Pawn, "P"},
-                                                            {Piece::White_Knight, "N"},
-                                                            {Piece::White_Bishop, "B"},
-                                                            {Piece::White_Rook, "R"},
-                                                            {Piece::White_Queen, "Q"},
-                                                            {Piece::White_King, "K"},
-                                                            {Piece::Black_Pawn, "p"},
-                                                            {Piece::Black_Knight, "n"},
-                                                            {Piece::Black_Bishop, "b"},
-                                                            {Piece::Black_Rook, "r"},
-                                                            {Piece::Black_Queen, "q"},
-                                                            {Piece::Black_King, "k"}});
+const std::unordered_map<Piece, std::string> piece_symbol(
+    {{Piece::White_Pawn, "P"},
+     {Piece::White_Knight, "N"},
+     {Piece::White_Bishop, "B"},
+     {Piece::White_Rook, "R"},
+     {Piece::White_Queen, "Q"},
+     {Piece::White_King, "K"},
+     {Piece::Black_Pawn, "p"},
+     {Piece::Black_Knight, "n"},
+     {Piece::Black_Bishop, "b"},
+     {Piece::Black_Rook, "r"},
+     {Piece::Black_Queen, "q"},
+     {Piece::Black_King, "k"}});
 
 const std::string STARTING_FEN =
     "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";

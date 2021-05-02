@@ -40,9 +40,7 @@ if(ENABLE_PCH)
     project_options
     INTERFACE
     <vector>
-    <string>
-    <map>
-    <utility>)
+    <string>)
 endif()
 
 #####################################################

@@ -1,5 +1,5 @@
-#include "square.h"
 #include "gtest/gtest.h"
+#include "square.h"
 
 TEST(SquareBasic, Equality) {
   Square s1, s2, s3{3}, s4{0, 3};

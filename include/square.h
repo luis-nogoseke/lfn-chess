@@ -3,7 +3,7 @@
 
 class Square {
  public:
-  Square():square_(255){};
+  Square() : square_(255){};
 
   explicit constexpr Square(std::uint8_t square) : square_(square) {}
 
