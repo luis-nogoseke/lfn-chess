@@ -15,6 +15,16 @@
 
 class Board {
  private:
+  Color next_move;
+  bool white_short_castle;
+  bool white_long_castle;
+  bool black_short_castle;
+  bool black_long_castle;
+  std::uint8_t castling_rights;
+  uint8_t moves_50;
+  uint8_t total_moves;
+  uint8_t en_passant;
+
   // White
   std::shared_ptr<PawnBitboard> white_pawns;
   std::shared_ptr<KnightBitboard> white_knights;
@@ -33,16 +43,6 @@ class Board {
 
   std::vector<Piece> squares{64, Piece::None};
 
-  Color next_move;
-  bool white_short_castle;
-  bool white_long_castle;
-  bool black_short_castle;
-  bool black_long_castle;
-  std::uint8_t castling_rights;
-  uint8_t moves_50;
-  uint8_t total_moves;
-  uint8_t en_passant;
-
  public:
   Board()
       : next_move(Color::WHITE),
@@ -50,9 +50,9 @@ class Board {
         white_long_castle(true),
         black_short_castle(true),
         black_long_castle(true),
+        castling_rights(15U),
         moves_50(0U),
         total_moves(0U),
-        castling_rights(15U),
         en_passant(64),
         white_pawns(std::make_shared<PawnBitboard>(Color::WHITE)),
         white_knights(std::make_shared<KnightBitboard>(Color::WHITE)),
@@ -70,9 +70,8 @@ class Board {
   std::string fen() {
     std::stringstream ss;
     // Pieces
-    int empty;
     for (int j = 8; j > 0; --j) {
-      empty = 0;
+      int empty = 0;
       for (int i = 8 * (j - 1); i < 8 * j; ++i) {
         if (squares[i] != Piece::None) {
           if (empty != 0) {
@@ -133,23 +132,24 @@ class Board {
     return ss.str();
   };
 
-  inline Color next_to_move() { return this->next_move; }
-  inline bool can_white_short_castle() {
+  inline Color next_to_move() const { return this->next_move; }
+
+  inline bool can_white_short_castle() const {
     return (castling_rights & WHITE_SHORT_CASTLE);
   }
-  inline bool can_white_long_castle() {
+  inline bool can_white_long_castle() const {
     return (castling_rights & WHITE_LONG_CASTLE);
   }
-  inline bool can_black_short_castle() {
+  inline bool can_black_short_castle() const {
     return (castling_rights & BLACK_SHORT_CASTLE);
   }
-  inline bool can_black_long_castle() {
+  inline bool can_black_long_castle() const {
     return (castling_rights & BLACK_LONG_CASTLE);
   }
-  inline uint8_t get_moves() { return this->moves_50; }
-  inline uint8_t get_total_moves() { return this->total_moves; }
+  inline uint8_t get_moves() const { return this->moves_50; }
+  inline uint8_t get_total_moves() const { return this->total_moves; }
 
-  uint8_t get_pieces_score(Color color) {
+  uint8_t get_pieces_score(Color color) const {
     if (color == Color::WHITE) {
       return white_pawns->population() + white_knights->population() * 3 +
              white_bishops->population() * 3 + white_rooks->population() * 5 +
@@ -171,91 +171,94 @@ class Board {
       return -1;
     }
     // Piece positions
-    int j = 1, i = 0, sq, column, row;
-    char letter;
+    int sq;
+    {
+      int j = 1, i = 0;
 
-    // Clear the board
-    for (sq = 0; sq < 64; ++sq) {
-      squares[sq] = Piece::None;
-    }
-
-    while ((j <= 64) && (i <= tokens[0].length())) {
-      letter = tokens[0].at(i);
-      i++;
-
-      column = 1 + ((j - 1) % 8);
-      row = 8 - ((j - 1) / 8);
-      sq = (((row - 1) * 8) + (column - 1));
-      switch (letter) {
-        case 'p':
-          squares[sq] = Piece::Black_Pawn;
-          break;
-        case 'r':
-          squares[sq] = Piece::Black_Rook;
-          break;
-        case 'n':
-          squares[sq] = Piece::Black_Knight;
-          break;
-        case 'b':
-          squares[sq] = Piece::Black_Bishop;
-          break;
-        case 'q':
-          squares[sq] = Piece::Black_Queen;
-          break;
-        case 'k':
-          squares[sq] = Piece::Black_King;
-          break;
-        case 'P':
-          squares[sq] = Piece::White_Pawn;
-          break;
-        case 'R':
-          squares[sq] = Piece::White_Rook;
-          break;
-        case 'N':
-          squares[sq] = Piece::White_Knight;
-          break;
-        case 'B':
-          squares[sq] = Piece::White_Bishop;
-          break;
-        case 'Q':
-          squares[sq] = Piece::White_Queen;
-          break;
-        case 'K':
-          squares[sq] = Piece::White_King;
-          break;
-        case '/':
-          j--;
-          break;
-        case '1':
-          break;
-        case '2':
-          j++;
-          break;
-        case '3':
-          j += 2;
-          break;
-        case '4':
-          j += 3;
-          break;
-        case '5':
-          j += 4;
-          break;
-        case '6':
-          j += 5;
-          break;
-        case '7':
-          j += 6;
-          break;
-        case '8':
-          j += 7;
-          break;
-        default:
-          std::cerr << "Invalid FEN\n";
-          return -1;
+      // Clear the board
+      for (sq = 0; sq < 64; ++sq) {
+        squares[sq] = Piece::None;
       }
-      j++;
-    }
 
+      while ((j <= 64) && (i <= tokens[0].length())) {
+        int column, row;
+        char letter;
+        letter = tokens[0].at(i);
+        i++;
+
+        column = 1 + ((j - 1) % 8);
+        row = 8 - ((j - 1) / 8);
+        sq = (((row - 1) * 8) + (column - 1));
+        switch (letter) {
+          case 'p':
+            squares[sq] = Piece::Black_Pawn;
+            break;
+          case 'r':
+            squares[sq] = Piece::Black_Rook;
+            break;
+          case 'n':
+            squares[sq] = Piece::Black_Knight;
+            break;
+          case 'b':
+            squares[sq] = Piece::Black_Bishop;
+            break;
+          case 'q':
+            squares[sq] = Piece::Black_Queen;
+            break;
+          case 'k':
+            squares[sq] = Piece::Black_King;
+            break;
+          case 'P':
+            squares[sq] = Piece::White_Pawn;
+            break;
+          case 'R':
+            squares[sq] = Piece::White_Rook;
+            break;
+          case 'N':
+            squares[sq] = Piece::White_Knight;
+            break;
+          case 'B':
+            squares[sq] = Piece::White_Bishop;
+            break;
+          case 'Q':
+            squares[sq] = Piece::White_Queen;
+            break;
+          case 'K':
+            squares[sq] = Piece::White_King;
+            break;
+          case '/':
+            j--;
+            break;
+          case '1':
+            break;
+          case '2':
+            j++;
+            break;
+          case '3':
+            j += 2;
+            break;
+          case '4':
+            j += 3;
+            break;
+          case '5':
+            j += 4;
+            break;
+          case '6':
+            j += 5;
+            break;
+          case '7':
+            j += 6;
+            break;
+          case '8':
+            j += 7;
+            break;
+          default:
+            std::cerr << "Invalid FEN\n";
+            return -1;
+        }
+        j++;
+      }
+    }
     // Next to play
     if (tokens[1] == "w") {
       next_move = Color::WHITE;
@@ -265,17 +268,17 @@ class Board {
 
     // Castling rights
     castling_rights = 0U;
-    for (char &i : tokens[2]) {
-      if (i == '-') {
+    for (const char &c : tokens[2]) {
+      if (c == '-') {
         break;
       }
-      if (i == 'K') {
+      if (c == 'K') {
         castling_rights |= WHITE_SHORT_CASTLE;
-      } else if (i == 'Q') {
+      } else if (c == 'Q') {
         castling_rights |= WHITE_LONG_CASTLE;
-      } else if (i == 'k') {
+      } else if (c == 'k') {
         castling_rights |= BLACK_SHORT_CASTLE;
-      } else if (i == 'q') {
+      } else if (c == 'q') {
         castling_rights |= BLACK_LONG_CASTLE;
       }
     }
@@ -294,7 +297,6 @@ class Board {
 
     // Set up the other bitboards
     std::shared_ptr<Bitboard> bb;
-    Piece p;
     for (sq = 0; sq < 64; ++sq) {
       switch (squares[sq]) {
         case Piece::White_Pawn:

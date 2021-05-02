@@ -3,7 +3,7 @@
 
 class Square {
  public:
-  Square() = default;
+  Square():square_(255){};
 
   explicit constexpr Square(std::uint8_t square) : square_(square) {}
 
@@ -26,7 +26,7 @@ class Square {
     return row >= 0 && file >= 0 && row < 8 && file < 8;
   }
 
-  constexpr bool operator==(const Square& other) const {
+  bool operator==(const Square& other) const {
     return square_ == other.square_;
   }
 

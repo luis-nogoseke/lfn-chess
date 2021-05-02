@@ -1,16 +1,49 @@
 cmake_minimum_required(VERSION 3.9)
+
 project("lfn-chess" CXX)
+include(cmake/StandardProjectSettings.cmake)
+include(cmake/PreventInSourceBuilds.cmake)
 
-set(CMAKE_CXX_STANDARD 17)
-SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall -Werror -pedantic -ggdb -fprofile-arcs -ftest-coverage")
 
-include(CheckCXXCompilerFlag)
-check_cxx_compiler_flag(-Weverything COMPILER_SUPPORTS_EVERYTHING)
-if(COMPILER_SUPPORTS_EVERYTHING)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weverything  -ggdb")
-  message(STATUS "The compiler ${CMAKE_CXX_COMPILER} supports -Weverything.")
+# Base options
+add_library(project_options INTERFACE)
+target_compile_features(project_options INTERFACE cxx_std_20)
+
+# enable compiler warnings
+add_library(project_warnings INTERFACE)
+include(cmake/CompilerWarnings.cmake)
+set_project_warnings(project_warnings)
+
+# enable cache system
+include(cmake/Cache.cmake)
+
+# sanitizer options if supported by compiler
+include(cmake/Sanitizers.cmake)
+enable_sanitizers(project_options)
+
+# enable doxygen
+include(cmake/Doxygen.cmake)
+enable_doxygen()
+
+# allow for static analysis options
+include(cmake/StaticAnalyzers.cmake)
+
+option(ENABLE_TESTING "Enable Test Builds" ON)
+
+# Very basic PCH example
+option(ENABLE_PCH "Enable Precompiled Headers" OFF)
+if(ENABLE_PCH)
+  # This sets a global PCH parameter, each project will build its own PCH, which is a good idea if any #define's change
+  #
+  # consider breaking this out per project as necessary
+  target_precompile_headers(
+    project_options
+    INTERFACE
+    <vector>
+    <string>
+    <map>
+    <utility>)
 endif()
-
 
 #####################################################
 set(SOURCE_FILES src/main.cc)
@@ -21,30 +54,11 @@ include_directories(include)
 #####################################################
 
 # Build tests
-add_subdirectory(tests)
-#####################################################
 
-# Doxygen Build
-option(BUILD_DOC "Build Documentation" ON)
+if(ENABLE_TESTING)
+  enable_testing()
+  message("Building Tests")
+  add_subdirectory(tests)
+endif()
 
-find_package(Doxygen)
-if(DOXYGEN_FOUND)
-    set(BUILD_DOC_DIR ${CMAKE_SOURCE_DIR}/build/docs)
-    if(NOT EXISTS ${BUILD_DOC_DIR})
-        file(MAKE_DIRECTORY ${BUILD_DOC_DIR})
-    endif()
-
-    set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/docs/Doxyfile)
-    set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
-    configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
-
-    message("Doxygen build started")
-    add_custom_target(Doxygen ALL
-            COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
-            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-            COMMENT "Generating API documentation with Doxygen"
-            VERBATIM)
-else(DOXYGEN_FOUND)
-    message("Doxygen needs to be installed to generate the documentation.")
-endif(DOXYGEN_FOUND)
 #####################################################

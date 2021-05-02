@@ -14,24 +14,24 @@ class Bitboard {
 
   explicit Bitboard(std::uint64_t position) : bitboard(position) {}
 
-  inline bool operator==(const Bitboard &b) {
+  inline bool operator==(const Bitboard &b) const{
     return this->bitboard == b.bitboard;
   }
 
-  inline bool operator!=(const Bitboard &b) {
+  inline bool operator!=(const Bitboard &b) const{
     return !(this->bitboard == b.bitboard);
   }
 
-  inline bool is_empty() { return (this->bitboard == 0U); }
+  inline bool is_empty() const { return (this->bitboard == 0U); }
 
-  inline bool is_single_pop() {
+  inline bool is_single_pop() const {
     if (this->bitboard == 0U) {
       return false;
     }
     return ((this->bitboard & (this->bitboard - 1)) == 0);
   }
 
-  inline uint8_t population() {
+  inline uint8_t population() const {
     uint64_t x = this->bitboard;
     x = x - ((x >> 1) & 0x5555555555555555);
     x = (x & 0x3333333333333333) + ((x >> 2) & 0x3333333333333333);
@@ -42,14 +42,14 @@ class Bitboard {
 
   inline void set_bit(uint8_t square) { bitboard |= (2 ^ square); }
 
-  inline bool is_bit_set(uint8_t square) {
+  inline bool is_bit_set(uint8_t square) const {
     return static_cast<bool>(bitboard && (square + 1));
   }
 };
 
 class PawnBitboard : public Bitboard {
  public:
-  PawnBitboard(Color color) {
+  explicit PawnBitboard(Color color) {
     if (color == Color::WHITE) {
       this->bitboard = 0xFF00;
     } else {
@@ -60,7 +60,7 @@ class PawnBitboard : public Bitboard {
 
 class RookBitboard : public Bitboard {
  public:
-  RookBitboard(Color color) {
+  explicit RookBitboard(Color color) {
     if (color == Color::WHITE) {
       this->bitboard = 0x81;
     } else {
@@ -71,7 +71,7 @@ class RookBitboard : public Bitboard {
 
 class KnightBitboard : public Bitboard {
  public:
-  KnightBitboard(Color color) {
+  explicit KnightBitboard(Color color) {
     if (color == Color::WHITE) {
       this->bitboard = 0x42;
     } else {
@@ -82,7 +82,7 @@ class KnightBitboard : public Bitboard {
 
 class BishopBitboard : public Bitboard {
  public:
-  BishopBitboard(Color color) {
+  explicit BishopBitboard(Color color) {
     if (color == Color::WHITE) {
       this->bitboard = 0x24;
     } else {
@@ -93,7 +93,7 @@ class BishopBitboard : public Bitboard {
 
 class QueenBitboard : public Bitboard {
  public:
-  QueenBitboard(Color color) {
+  explicit QueenBitboard(Color color) {
     if (color == Color::WHITE) {
       this->bitboard = 0x8;
     } else {
@@ -104,7 +104,7 @@ class QueenBitboard : public Bitboard {
 
 class KingBitboard : public Bitboard {
  public:
-  KingBitboard(Color color) {
+  explicit KingBitboard(Color color) {
     if (color == Color::WHITE) {
       this->bitboard = 0x10;
     } else {
