@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.9)
 project("lfn-chess" CXX)
 
 set(CMAKE_CXX_STANDARD 17)
-SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall -Werror -pedantic -ggdb")
+SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall -Werror -pedantic -ggdb -fprofile-arcs -ftest-coverage")
 
 include(CheckCXXCompilerFlag)
 check_cxx_compiler_flag(-Weverything COMPILER_SUPPORTS_EVERYTHING)

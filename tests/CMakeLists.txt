@@ -9,7 +9,7 @@ if(NOT EXISTS ${GOOGLETEST_DIR})
     )
 endif()
 
-set(CMAKE_CXX_FLAGS "-Wno-c++98-compat  -ggdb")
+set(CMAKE_CXX_FLAGS "-Wno-c++98-compat  -ggdb -fprofile-arcs -ftest-coverage")
 add_subdirectory(lib/googletest)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/include)
@@ -17,6 +17,7 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 add_executable(Unit_Tests_run
     bitboard_tests.cc
     board_tests.cc
+    square_tests.cc
 )
 
 target_link_libraries(Unit_Tests_run gtest gtest_main)

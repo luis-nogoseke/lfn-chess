@@ -304,16 +304,16 @@ class Board {
           white_knights->set_bit(sq);
           break;
         case Piece::White_Bishop:
-          white_bishops->set_bit(sp);
+          white_bishops->set_bit(sq);
           break;
         case Piece::White_Rook:
-          white_rooks->set_bit(sp);
+          white_rooks->set_bit(sq);
           break;
         case Piece::White_Queen:
-          white_queen->set_bit(sp);
+          white_queen->set_bit(sq);
           break;
         case Piece::White_King:
-          white_king->set_bit(sp);
+          white_king->set_bit(sq);
           break;
         case Piece::Black_Pawn:
           black_pawns->set_bit(sq);
@@ -322,16 +322,16 @@ class Board {
           black_knights->set_bit(sq);
           break;
         case Piece::Black_Bishop:
-          black_bishops->set_bit(sp);
+          black_bishops->set_bit(sq);
           break;
         case Piece::Black_Rook:
-          black_rooks->set_bit(sp);
+          black_rooks->set_bit(sq);
           break;
         case Piece::Black_Queen:
-          black_queen->set_bit(sp);
+          black_queen->set_bit(sq);
           break;
         case Piece::Black_King:
-          black_king->set_bit(sp);
+          black_king->set_bit(sq);
           break;
         default:
           break;
